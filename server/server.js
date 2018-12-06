@@ -13,6 +13,11 @@ app.use(express.static(publicPath));
 var server = http.createServer(app);
 var io = socketIO(server);
 
+// Listen to onconnection
+io.on('connection', (socket) => {
+    console.log('New user connection');
+});
+
 // server.lister instead of app.listen
 server.listen(port, () => {
     console.log('Server is up on port: '+port);
