@@ -16,6 +16,25 @@ var io = socketIO(server);
 // Listen to onconnection
 io.on('connection', (socket) => {
     console.log('New user connection');
+
+    // Listen to clients
+    socket.on('createMessage', (newMessage) => {
+        var td = new Date();
+        newMessage.createAt = td.getTime();
+        console.log('createEmail', newMessage);
+
+        // io.emit send event to every connection
+        io.emit('newMessage', {
+            from: newMessage.from,
+            text: newMessage.text,
+            createAt: td.getTime()
+        });
+    });
+
+    // List to ondisconnect
+    socket.on('disconnect', () => {
+        console.log('User was disconnected');
+    });
 });
 
 // server.lister instead of app.listen
