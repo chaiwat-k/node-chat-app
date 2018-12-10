@@ -16,7 +16,7 @@ var io = socketIO(server);
 
 // Listen to onconnection
 io.on('connection', (socket) => {
-    console.log('New user connection');
+    
     socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
     // socket.broadcast.emit from Admin text New user joined    
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
