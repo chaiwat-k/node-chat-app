@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
     // Listen to clients
-    socket.on('createMessage', (newMessage) => {
+    socket.on('createMessage', (newMessage, callback) => {
         var td = new Date();
         newMessage.createAt = td.getTime();
         console.log('createEmail', newMessage);
@@ -30,6 +30,7 @@ io.on('connection', (socket) => {
         // io.emit send event to every connection
         io.emit('newMessage', 
         generateMessage(newMessage.from,newMessage.text));
+        callback('This is from the server!');
 
         // broadcast to everyone else
         // socket.broadcast.emit('newMessage', {
