@@ -18,18 +18,30 @@ function scrollToBottom(){
 }
 
 socket.on('connect', function(){
-    console.log('Connected to server');
+    //console.log('Connected to server');
+    var params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function(err){
+        if(err){
+            console.log(err);            
+            window.location.href = '/';
+            return;
+        }
+        console.log('No error');
+    });
 }); 
-
-// function createMsg(){
-//     socket.emit('createMessage', {
-//         from: 'jen@exampl.com',
-//         text: 'Hey, this is Andrew'
-//     });    
-// }
 
 socket.on('disconnect', function(){
     console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', function(users){
+    //console.log('List of users: ',users);
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+
+    jQuery('#users').html(ol);
 });
 
 // Custom Event
