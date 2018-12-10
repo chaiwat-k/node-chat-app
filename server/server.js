@@ -47,20 +47,31 @@ io.on('connection', (socket) => {
 
     // Listen to clients
     socket.on('createMessage', (newMessage, callback) => {
-        // io.emit send event to every connection
-        io.emit('newMessage', 
-        generateMessage(newMessage.from,newMessage.text));
+        if(!isRealString(newMessage.text)){
+            callback('Empty text');
+            return;
+        }
+        var user = users.getUser(socket.id);
+        if(!user){
+            callback('Cannot find user');
+            return;
+        }
+        io.to(user.room).emit('newMessage', 
+        generateMessage(user.name,newMessage.text));            
         callback();
     });
 
     socket.on('createLocationMessage', (coors) => {
-        io.emit('newLocationMessage', generateLocationMessage(
-            'Admin',coors.latitude,coors.longitude));
+        if(!coors.latitude || !coors.longitude) return;
+        var user = users.getUser(socket.id);
+        if(!user) return;
+        io.to(user.room).emit('newLocationMessage', 
+        generateLocationMessage(user.name,
+            coors.latitude,coors.longitude));
     });
 
     // List to ondisconnect
     socket.on('disconnect', () => {
-        //console.log('User was disconnected');
         var user = users.removeUser(socket.id);
         if(user){
             io.to(user.room).emit('updateUserList', users.getUserList(user.room));
