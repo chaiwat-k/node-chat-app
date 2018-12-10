@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
         // io.emit send event to every connection
         io.emit('newMessage', 
         generateMessage(newMessage.from,newMessage.text));
-        callback('This is from the server!');
+        callback();
     });
 
     socket.on('createLocationMessage', (coors) => {
